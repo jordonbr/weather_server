@@ -1,0 +1,78 @@
+<html>
+<head>
+<title> City Weather </title>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body>
+<form>
+Enter a City: <input id="cityfield" type="text" value=""><br>
+Suggestion: <span id="txtHint" >Empty</span>
+<input id="button" type="submit" value="Submit">
+</form>
+<p> City </p>
+<textarea id="dispcity">No City</textarea>
+<div id="weather">No Weather</div>
+<script>
+$("#button").click(function(e) {
+  $("#dispcity").text($("#cityfield").val());
+  var weather_url="https://api.wunderground.com/api/d03dc5211b515ff9/geolookup/conditions/q/UT/";
+  weather_url += ($("#cityfield").val());
+  weather_url += ".json";
+  console.log(weather_url);
+  $.ajax({
+    url : weather_url,
+    dataType : "jsonp",
+    success : function(parsed_json){
+      var location = parsed_json['location']['city'];
+      var temp_string = parsed_json['current_observation']['temperature_string'];
+      var current_weather = parsed_json['current_observation']['weather'];
+      var relative_hum = parsed_json['current_observation']['relative_humidity'];
+      var last_updated = parsed_json['current_observation']['observation_time'];
+      
+      everything = "<ul>";
+      everything += "<li>Location: "+location;
+      everything += "<li>Temperature: "+temp_string;
+      everything += "<li>Relative Humidity: "+relative_hum;
+      everything += "<li>Weather: "+current_weather;
+      everything += "<li>Last Updated: "+last_updated;
+      everything += "</ul>";
+      $("#weather").html(everything);
+    }
+  });
+  e.preventDefault();
+});
+$("#cityfield").keyup(function(){
+  var url;
+//  url ="https://students.cs.byu.edu/~clement/CS360/ajax/getcity.cgi?q="
+  url ="http://52.10.180.108:3020/jquery/getcity.html?q="
+  url += $("#cityfield").val();
+  console.log("URL "+url);
+  $.getJSON(url, function(data) {
+    var everything;
+    everything = "<ul>";
+    $.each(data, function(i,item) {
+      everything += "<li> " + data[i].city + "</li>";
+    });
+    everything += "</ul>"
+    $("#txtHint").html(everything);
+    console.log("Got " + data);
+    console.log("Got " + data[0]);
+    console.log("Got " + data[0].city);
+  })
+  .done(function(){console.log("request success");})
+  .fail(function(jqXHR, textStatus, errorThrown){
+    console.log("Failed "+textStatus);
+    console.log("incoming " + jqXHR.responseText);
+  })
+  .always(function() {console.log("always");})
+  .complete(function() {console.log("complete");});
+  
+  $("#txtHint").text($("#cityfield").val());
+});
+</script>
+
+</body>
+</html>
+
+
+
