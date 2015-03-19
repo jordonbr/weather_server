@@ -44,7 +44,7 @@ $("#button").click(function(e) {
 $("#cityfield").keyup(function(){
   var url;
 //  url ="https://students.cs.byu.edu/~clement/CS360/ajax/getcity.cgi?q="
-  url ="htts://52.10.180.108:3020/jquery/getcity.html?q="
+  url ="http://52.10.180.108/getcity/?q=";
   url += $("#cityfield").val();
   console.log("URL "+url);
   $.getJSON(url, function(data) {
@@ -67,7 +67,7 @@ $("#cityfield").keyup(function(){
   .always(function() {console.log("always");})
   .complete(function() {console.log("complete");});
   
-  $("#txtHint").text($("#cityfield").val());
+//  $("#txtHint").text($("#cityfield").val());
 });
 </script>
 
